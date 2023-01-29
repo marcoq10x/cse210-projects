@@ -47,15 +47,15 @@ class Program
 /* Second Class "Entry" */
 class Entry
 {
-    public string prompt;
-    public string response;
-    public DateTime date;
+    public string _prompt;
+    public string _response;
+    public DateTime _date;
 
     public Entry(string prompt, string response)
     {
-        this.prompt = prompt;
-        this.response = response;
-        this.date = DateTime.Now;
+        this._prompt = prompt;
+        this._response = response;
+        this._date = DateTime.Now;
     }
 }
 
@@ -67,15 +67,15 @@ class Journal
 {
     using (StreamWriter writer = new StreamWriter(filename))
     {
-        foreach (Entry entry in entries)
+        foreach (Entry entry in _entries)
         {
-            string line = entry.date + "," + entry.prompt + "," + entry.response;
+            string line = entry._date + "," + entry._prompt + "," + entry._response;
             writer.WriteLine(line);
         }
     }
 }
-    private List<Entry> entries = new List<Entry>();
-    private List<string> prompts = new List<string>() {
+    private List<Entry> _entries = new List<Entry>();
+    private List<string> _prompts = new List<string>() {
         "What scripture did I read today?",
         "What changes can I make to become a better person?",
         "Did I do something good for someone else?",
@@ -86,30 +86,30 @@ class Journal
     public void WriteEntry()
     {
         Random rand = new Random();
-        int index = rand.Next(prompts.Count);
-        string prompt = prompts[index];
+        int index = rand.Next(_prompts.Count);
+        string prompt = _prompts[index];
 
         Console.Write(prompt + " ");
         string response = Console.ReadLine();
 
         Entry entry = new Entry(prompt, response);
-        entries.Add(entry);
+        _entries.Add(entry);
     }
 
     public void DisplayEntries()
     {
-        foreach (Entry entry in entries)
+        foreach (Entry entry in _entries)
         {
-            Console.WriteLine("Date: " + entry.date);
-            Console.WriteLine("Prompt: " + entry.prompt);
-            Console.WriteLine("Response: " + entry.response);
+            Console.WriteLine("Date: " + entry._date);
+            Console.WriteLine("Prompt: " + entry._prompt);
+            Console.WriteLine("Response: " + entry._response);
             Console.WriteLine();
         }
     }
 
     public void LoadFromFile(string filename)
     {
-        entries.Clear();
+        _entries.Clear();
 
         using (StreamReader reader = new StreamReader(filename))
         {
@@ -123,7 +123,7 @@ class Journal
                 string response = parts[2];
 
                 Entry entry = new Entry(prompt, response);
-                entries.Add(entry);
+                _entries.Add(entry);
             }
         }    
     }
