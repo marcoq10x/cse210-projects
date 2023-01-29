@@ -1,6 +1,5 @@
 using System;
-using System.IO;
-using System.Collections.Generic;
+
 
 /*First Class "program" */
 class Program
