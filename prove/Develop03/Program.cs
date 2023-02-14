@@ -153,3 +153,5 @@ class Scripture
         }
     }
 }
+
+// To exceed, I tried to hide from words not already hidden and to choose from a set of scriptures randomly.
