@@ -38,27 +38,39 @@ namespace ScriptureProgram
 
     class Reference
     {
-        public string Book { get; set; }
-        public int Chapter { get; set; }
-        public int Verse { get; set; }
-        public int EndVerse { get; set; }
+        private string _book;
+        private int _chapter;
+        private int _verse;
+        private int _endVerse;
 
         public Reference(string book, int chapter, int verse)
         {
-            Book = book;
-            Chapter = chapter;
-            Verse = verse;
-            EndVerse = verse;
+            _book = book;
+            _chapter = chapter;
+            _verse = verse;
+            _endVerse = verse;
         }
 
         public Reference(string book, int chapter, int verse, int endVerse)
         {
-            Book = book;
-            Chapter = chapter;
-            Verse = verse;
-            EndVerse = endVerse;
+            _book = book;
+            _chapter = chapter;
+            _verse = verse;
+            _endVerse = endVerse;
+        }
+        public string GetReferenceText()
+        {
+            if (_verse == _endVerse)
+            {
+                return $"{_book} {_chapter}:{_verse}";
+            }
+            else
+            {
+                return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+            }
         }
     }
+
 
 class Scripture
     {
@@ -94,6 +106,7 @@ class Scripture
         public string GetRenderedText()
         {
             string renderedText = "";
+            reference.GetReferenceText();
             foreach (Word _word in words)
             {
                 renderedText += _word.GetRenderedText() + " ";
@@ -153,5 +166,7 @@ class Scripture
         }
     }
 }
+
+
 
 // To exceed, I tried to hide from words not already hidden and to choose from a set of scriptures randomly.
