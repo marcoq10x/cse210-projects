@@ -1,165 +1,177 @@
 using System;
-using System.Threading;
 
-namespace MindfulnessApp
+using System.Collections.Generic;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        GoalFiles file = new GoalFiles();
+        List<Goal> goals = new List<Goal>();
+        int points = 0;
+        int quit = 0;
+        int choice = 0;
+        while (quit != 6)
         {
-            Console.WriteLine("Menu Options:");
-            Console.WriteLine("1. Start Breathing Activity");
-            Console.WriteLine("2. Start Reflecting Activity");
-            Console.WriteLine("3. Start Listing Activity");
-            Console.WriteLine("4. Quit");
-
-            Console.Write("Select a choice from the menu: ");
-            int choice = int.Parse(Console.ReadLine());
-
-            switch (choice)
-            {
-                case 1:
-                    StartBreathingActivity();
-                    break;
-
-                case 2:
-                    StartReflectingActivity();
-                    break;
-
-                case 3:
-                    StartListingActivity();
-                    break;
-
-                case 4:
-                    Environment.Exit(0);
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid choice. Please select again.");
-                    Main(args);
-                    break;
-            }
-        }
-
-        static void StartBreathingActivity()
-        {
-            Console.Write("Enter duration of activity in seconds: ");
-            int duration = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Breathing Activity");
-            Console.WriteLine("This activity will help you relax by walking you through breathing in and out slowly. Clear your mind and focus on your breathing.");
-            Console.WriteLine("Get ready to begin in 3 seconds...");
-
-            for (int i = 3; i >= 1; i--)
-            {
-                Console.Write(i + "...");
-                Thread.Sleep(1000);
-            }
-
-            Console.WriteLine("Begin!");
-
-            for (int i = 0; i < duration; i++)
-            {
-                if (i % 2 == 0)
+            Console.Clear();
+            Console.WriteLine("Welcome to the Eternal Quest");
+            Console.WriteLine($"You have {points} points.");
+            Console.WriteLine(" ");
+            Console.WriteLine("Here are your menu options");
+            Console.WriteLine(" 1. Create New Goal");
+            Console.WriteLine(" 2. List Goals");
+            Console.WriteLine(" 3. Save Goals");
+            Console.WriteLine(" 4. Load Goals");
+            Console.WriteLine(" 5. Record Event");
+            Console.WriteLine(" 6. Quit");
+            Console.WriteLine("Please select an option:");
+            quit = int.Parse(Console.ReadLine());
+            Console.Clear();
+            if (quit == 1)
+            {        
+                Console.WriteLine("Please select a goal type from the following:");
+                Console.WriteLine("1. Simple Goal - A goal that is finished after completing it one time.");
+                Console.WriteLine("2. Eternal Goal - A goal that you never really finish but you can continually get points from, for eternity!");
+                Console.WriteLine("3. Checklist Goal- This is a goal where you specify the number of time you would like to complete it."+"\n" + "You earn points for each completion as well as bonus points for hitting your total! ");          
+                choice = int.Parse(Console.ReadLine());
+                if (choice == 1)
                 {
-                    Console.WriteLine("Breathe in...");
+                    Simple simple = new Simple();
+                    simple.GoalName();
+                    simple.GoalDesc();
+                    simple.GoalPoints();
+                    goals.Add(simple);
+                }
+                if (choice == 2)
+                {
+                  Eternal eternal = new Eternal();
+                    eternal.GoalName();
+                    eternal.GoalDesc();
+                    eternal.GoalPoints();
+                    goals.Add(eternal);  
+                }
+                if (choice == 3)
+                {
+                    Checklist checklist = new Checklist();
+                    checklist.GoalName();
+                    checklist.GoalDesc();
+                    checklist.GoalPoints();
+                    checklist.GoalBonus(); 
+                    goals.Add(checklist);
+                }
+            }
+
+            else if (quit == 2)
+            {
+                int x = 0;
+                foreach (Goal goal in goals)
+                if (goals.Count == 0)
+                {
+                    Console.WriteLine("You have not created any goals yet.");
                 }
                 else
                 {
-                    Console.WriteLine("Breathe out...");
-                }
-
-                Thread.Sleep(1000);
+                    x++;
+                    goal.ShowGoal(x);
+                }    
+                    int x = 0;
+                    foreach (Goal goal in goals)
+                    {   
+                        x++;
+                        goal.DisplayGoal(x);   
+                    }  
+                }  
             }
 
-            Console.WriteLine("Well done! You have completed the Breathing Activity for {0} seconds.", duration);
-            Thread.Sleep(2000);
-            Main(null);
-        }
-
-        static void StartReflectingActivity()
-        {
-            Console.Write("Enter duration of activity in seconds: ");
-            int duration = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Reflection Activity");
-            Console.WriteLine("This activity will help you reflect on times in your life when you have shown strength and resilience. This will help you recognize the power you have and how you can use it in other aspects of your life.");
-            Console.WriteLine("Get ready to begin in 3 seconds...");
-
-            for (int i = 3; i >= 1; i--)
+            else if (quit == 3)
             {
-                Console.Write(i + "...");
-                Thread.Sleep(1000);
+                file.Save(goals, points);
             }
-
-            Console.WriteLine("Begin!");
-
-            Random random = new Random();
-            string[] prompts = { "Think of a time when you stood up for someone else.", "Think of a time when you did something really difficult.", "Think of a time when you helped someone in need.", "Think of a time when you did something truly selfless." };
-
-            int count = 0;
-            while (count < duration)
+            else if (quit == 4)
             {
-                string prompt = prompts[random.Next(prompts.Length)];
-
-                Console.WriteLine(prompt);
-
-                string[] questions = {
-                    "Why was this experience meaningful to you?",
-                    "Have you ever done anything like this before?",
-                    "How did you get started?",
-                    "How did you feel when it was complete?",
-                    "What made this time different than other times when you were not as successful?",
-                    "What is your favorite thing about this experience?",
-                    "What could you learn from this experience that applies to other situations?",
-                    "What did you learn about yourself through this experience?",
-                    "How can you keep this experience in mind in future situations?"
-};
-                string question = questions[random.Next(questions.Length)];
-
-            Console.WriteLine(question);
-
-            Thread.Sleep(5000);
-
-            count += 10;
+                file.Load();
+                goals = file.GetGoals();
+                points = file.GetPoints();
+            }
+            else if (quit == 5)
+            {
+                file.GetRecordEvent(goals);
+                points = file.GetPoints();
+            }
+            else
+            {
+              Console.WriteLine("Thanks fo setting goals with us today!");
+              break;  
+            }
         }
-
-        Console.WriteLine("Well done! You have completed the Reflection Activity for {0} seconds.", duration);
-        Thread.Sleep(2000);
-        Main(null);
-    }
-
-    static void StartListingActivity()
-    {
-        Console.Write("Enter duration of activity in seconds: ");
-        int duration = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("Listing Activity");
-        Console.WriteLine("This activity will help you organize your thoughts and clear your mind by making a list of things that are important to you. This can be anything from goals, to priorities, to things you are grateful for.");
-        Console.WriteLine("Get ready to begin in 3 seconds...");
-
-        for (int i = 3; i >= 1; i--)
-        {
-            Console.Write(i + "...");
-            Thread.Sleep(1000);
-        }
-
-        Console.WriteLine("Begin!");
-
-        int count = 0;
-        while (count < duration)
-        {
-            Console.Write("Enter an item for your list: ");
-            string item = Console.ReadLine();
-
-            Console.WriteLine("Added {0} to your list.", item);
-
-            count += 5;
-        }
-
-        Console.WriteLine("Well done! You have completed the Listing Activity for {0} seconds.", duration);
-        Thread.Sleep(2000);
-        Main(null);
     }
 }
+public abstract class Goal
+{
+    protected string _name;
+    protected string _desc;
+    protected int _points;
+    protected bool _isComplete;
+    public Goal(string name, string description, int points)
+    {
+        _name = name;
+        _desc = description;
+        _points = points;
+        _isComplete = false;
+    }
+    public Goal()
+    {
+        _name = "";
+        _desc = "";
+        _points = 0;
+        _isComplete = false;
+    }
+    public void GoalName()
+    {
+        Console.WriteLine("Please enter a title for your goal:");
+        _name = Console.ReadLine();
+    }
+    public void GoalDesc()
+    {
+        Console.WriteLine("Describe what you want to accomplish:");
+        _desc = Console.ReadLine();
+    }
+    public void GoalPoints()
+    {
+        Console.WriteLine("How many points is this goal worth?:");
+        Console.ReadLine();
+        _points = int.Parse(Console.ReadLine());
+    }
+
+    public int GetPoints()
+    {
+        return _points;
+    }
+    public virtual void RecordEvent()
+    {
+        _isComplete = true;
+    }
+    public virtual bool Iscomplete()
+    {
+        return _isComplete;
+    }
+
+    public virtual void ShowGoal (int goalNumber)
+    public virtual void DisplayGoal (int goalNumber)
+    {
+        Console.WriteLine($"{goalNumber}. {_name} ({_desc})");
+    }
+
+    public virtual void DisplayGoalSimple(int goalNumber)
+    {
+        Console.WriteLine($"{goalNumber}. {_name}");
+    }
+
+    public virtual string DisplayGoal()
+    public virtual string DisplayGoalString()
+    {
+        string goal = $"{_name}: {_desc}: {_points}{ _isComplete}";
+        string goal = $"{_name}|{_desc}| {_points}|{ _isComplete}";
+        return goal;
+    }
 }
